@@ -335,6 +335,10 @@
         window.onload = function () {
             document.getElementById('api-key-input').value = API_KEY;
             loadSettings();
+            if (conversionHistory.length === 0) {
+                stats = { conversions: 0, downloads: 0, failures: 0 };
+                localStorage.setItem('stats', JSON.stringify(stats));
+            }
             updateHistoryDisplay();
             updateStats();
             document.getElementById('youtube-url').focus();
