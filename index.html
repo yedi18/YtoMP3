@@ -612,6 +612,11 @@
         }
 
         function saveSettings() {
+            const apiKey = document.getElementById('api-key-input').value.trim();
+            if (apiKey) {
+                API_KEY = apiKey;
+                localStorage.setItem('apiKey', apiKey);
+            }
             const settings = {
                 autoDownload: document.getElementById('auto-download').checked,
                 saveHistory: document.getElementById('save-history').checked,
