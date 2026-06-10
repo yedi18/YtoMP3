@@ -629,8 +629,10 @@
             if (!confirm('Clear all history?')) return;
             conversionHistory = [];
             localStorage.setItem('conversionHistory', JSON.stringify(conversionHistory));
+            stats = { conversions: 0, downloads: 0, failures: 0 };
+            saveStats();
             updateHistoryDisplay();
-            showToast('History cleared', 'info');
+            showToast('History and stats cleared', 'info');
         }
 
         /* ─── Stats ─────────────────────────────────────────────── */
