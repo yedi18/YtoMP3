@@ -284,6 +284,18 @@
         }
         const VALID_VIDEO_ID = /^[A-Za-z0-9_-]{6,20}$/;
 
+        function normalizeApiResponse(data) {
+            if (data.link) return data; // old API format — nothing to do
+            // yt-api format: extract best audio-only stream
+            const audioUrl = (data.adaptiveFormats || [])
+                .filter(f => f.mimeType && f.mimeType.startsWith('audio/mp4'))
+                .sort((a, b) => (b.bitrate || 0) - (a.bitrate || 0))[0]?.url
+                || (data.formats || [])[0]?.url;
+            const secs = parseInt(data.lengthSeconds || 0);
+            const duration = secs ? `${Math.floor(secs/60)}:${String(secs%60).padStart(2,'0')}` : '';
+            return { ...data, link: audioUrl, duration };
+        }
+
         // Global Variables
         let selectedFormat = 'mp3';
         let selectedQuality = 'medium';
@@ -419,7 +431,7 @@
                         }
                     }
 
-                    const data = await response.json();
+                    const data = normalizeApiResponse(await response.json());
 
                     updateProgress(80, 'Almost done...');
 
